@@ -1,6 +1,6 @@
 import { Roboto } from 'next/font/google'
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next'
+import './globals.css'
 import '@camposweb-ignite-ui/react/dist/index.css'
 
 const roboto = Roboto({
@@ -10,14 +10,14 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
-  title: "Ignite Call",
-  description: "Sistema de agendamento",
-};
+  title: 'Ignite Call',
+  description: 'Sistema de agendamento',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="pt-BR">
@@ -27,5 +27,5 @@ export default function RootLayout({
         {children}
       </body>
     </html>
-  );
+  )
 }
