@@ -10,10 +10,13 @@
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
-    "@camposweb-ignite-ui/react": "^3.0.1",
+    "@camposweb-ignite-ui/react": "^5.0.1",
+    "@camposweb-ignite-ui/ts-config": "^5.0.0",
     "next": "14.2.22",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tailwind-merge": "^2.6.0",
+    "tailwind-variants": "^0.3.0"
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.2.2",
