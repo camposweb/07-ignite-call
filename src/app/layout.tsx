@@ -10,8 +10,10 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
-  title: 'Ignite Call',
-  description: 'Sistema de agendamento',
+  title: {
+    template: ' %s | Ignite Call',
+    default: 'Ignite Call | Sistema de agendamento',
+  },
 }
 
 export default function RootLayout({

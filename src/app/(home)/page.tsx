@@ -2,8 +2,13 @@ import { Heading, Text } from '@camposweb-ignite-ui/react'
 import Image from 'next/image'
 import previewImage from '../../assets/app-preview.png'
 import { ClaimUsernameForm } from '@/components/claim-username-form'
+import { Metadata } from 'next'
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: 'Home',
+}
+
+export default async function Home() {
   return (
     <div className="flex h-screen items-center justify-center gap-20">
       <div className="px-10 md:max-w-[485px]">
