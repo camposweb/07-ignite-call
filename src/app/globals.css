@@ -2,4 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-
+@layer utilities {
+	input[type="time"]::-webkit-calendar-picker-indicator {
+		filter: invert(100%) brightness(30%);
+	}
+}
