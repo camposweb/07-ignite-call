@@ -18,6 +18,23 @@ import { z } from 'zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getWeeksDays } from '@/utils/get-weeks-days'
+import { FormError } from '../form-error'
+import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
+
+/* const rawTimeIntervalFormSchema = z.object({
+  intervals: z
+    .array(
+      z.object({
+        weekDay: z.number().min(0).max(6),
+        enabled: z.boolean(),
+        startTime: z.string(),
+        endTime: z.string(),
+      }),
+    )
+    .length(7),
+})
+
+type RawTimeIntervalFormData = z.infer<typeof rawTimeIntervalFormSchema> */
 
 const timeIntervalFormSchema = z.object({
   intervals: z
@@ -31,11 +48,10 @@ const timeIntervalFormSchema = z.object({
     )
     .length(7)
     .transform((intervals) => intervals.filter((interval) => interval.enabled))
-    .refine(
-      (intervals) => intervals.length > 0,
-      'Você precisa selecionar pelo menos um dia da semana.',
-    ),
-  /* .transform((intervals) =>
+    .refine((intervals) => intervals.length > 0, {
+      message: 'Você precisa selecionar pelo menos um dia da semana.',
+    })
+    .transform((intervals) =>
       intervals.map((interval) => {
         return {
           weekDay: interval.weekDay,
@@ -43,27 +59,46 @@ const timeIntervalFormSchema = z.object({
           endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
         }
       }),
-    ), */
+    )
+    .refine(
+      (intervals) => {
+        return intervals.every(
+          (interval) =>
+            interval.endTimeInMinutes - 60 >= interval.startTimeInMinutes,
+        )
+      },
+      {
+        message:
+          'O horário de término deve ser pelo menos 1 hora após o horário de início.',
+      },
+    ),
 })
 
-type TimeIntervalFormData = z.infer<typeof timeIntervalFormSchema>
+type TimeIntervalFormInput = z.input<typeof timeIntervalFormSchema>
+
+type TimeIntervalFormOutput = z.output<typeof timeIntervalFormSchema>
 
 export function TimeInterval() {
-  const { register, handleSubmit, control, watch } =
-    useForm<TimeIntervalFormData>({
-      resolver: zodResolver(timeIntervalFormSchema),
-      defaultValues: {
-        intervals: [
-          { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00' },
-          { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00' },
-          { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00' },
-          { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00' },
-          { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00' },
-          { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00' },
-          { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00' },
-        ],
-      },
-    })
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { isSubmitting, errors },
+  } = useForm<TimeIntervalFormInput>({
+    resolver: zodResolver(timeIntervalFormSchema),
+    defaultValues: {
+      intervals: [
+        { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00' },
+      ],
+    },
+  })
 
   const weeksDays = getWeeksDays()
 
@@ -74,7 +109,11 @@ export function TimeInterval() {
 
   const intervals = watch('intervals')
 
-  async function handleSetTimeInterval() {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async function handleSetTimeInterval(data: any) {
+    const formData = data as TimeIntervalFormOutput
+    console.log(formData)
+  }
 
   return (
     <div className="m-auto mt-20 max-w-xl px-4 py-0">
@@ -125,7 +164,14 @@ export function TimeInterval() {
             )
           })}
         </IntervalContainer>
-        <Button type="submit" className="mt-4" /* disabled={isSubmitting} */>
+
+        {errors.intervals && (
+          <FormError size="sm" className="mt-2">
+            {errors.intervals.root?.message}
+          </FormError>
+        )}
+
+        <Button type="submit" className="mt-4" disabled={isSubmitting}>
           Próximo passo
           <ArrowRight />
         </Button>
