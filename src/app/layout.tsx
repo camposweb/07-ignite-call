@@ -2,6 +2,7 @@ import { Roboto } from 'next/font/google'
 import type { Metadata } from 'next'
 import './globals.css'
 import '@camposweb-ignite-ui/react/dist/index.css'
+import Authprovider from './AuthProvider'
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -26,7 +27,7 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} bg-gray900 text-gray100 antialiased`}
       >
-        {children}
+        <Authprovider>{children}</Authprovider>
       </body>
     </html>
   )
