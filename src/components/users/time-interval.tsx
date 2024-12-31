@@ -20,21 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { getWeeksDays } from '@/utils/get-weeks-days'
 import { FormError } from '../form-error'
 import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
-
-/* const rawTimeIntervalFormSchema = z.object({
-  intervals: z
-    .array(
-      z.object({
-        weekDay: z.number().min(0).max(6),
-        enabled: z.boolean(),
-        startTime: z.string(),
-        endTime: z.string(),
-      }),
-    )
-    .length(7),
-})
-
-type RawTimeIntervalFormData = z.infer<typeof rawTimeIntervalFormSchema> */
+import { api } from '@/lib/axios'
 
 const timeIntervalFormSchema = z.object({
   intervals: z
@@ -111,8 +97,10 @@ export function TimeInterval() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function handleSetTimeInterval(data: any) {
-    const formData = data as TimeIntervalFormOutput
-    console.log(formData)
+    const { intervals } = data as TimeIntervalFormOutput
+    await api.post('/time-intervals', {
+      intervals,
+    })
   }
 
   return (
