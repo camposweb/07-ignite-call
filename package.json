@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@auth/core": "^0.37.4",
-    "@camposweb-ignite-ui/react": "^7.1.0",
+    "@camposweb-ignite-ui/react": "^7.2.0",
     "@camposweb-ignite-ui/ts-config": "^5.0.0",
     "@hookform/resolvers": "^3.9.1",
     "@prisma/client": "^6.1.0",

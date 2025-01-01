@@ -19,9 +19,6 @@ export async function POST(req: NextRequest) {
   }
 
   const session = await auth()
-  /* const user = session.
-  const user = session?.user?.name
-  const { session, intervals } = JSON.parse(body) */
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -37,7 +34,7 @@ export async function POST(req: NextRequest) {
           week_day: interval.weekDay,
           time_start_in_minutes: interval.startTimeInMinutes,
           time_end_in_minutes: interval.endTimeInMinutes,
-          user_id: session.user?.id,
+          user_id: session.user?.id || '',
         },
       })
     }),
@@ -48,7 +45,7 @@ export async function POST(req: NextRequest) {
       week_day: interval.weekDay,
       time_start_in_minutes: interval.startTimeInMinutes,
       time_end_in_minutes: interval.endTimeInMinutes,
-      user_id: session.user?.id,
+      user_id: session.user?.id || '',
     })),
   }) */
 

@@ -5,12 +5,13 @@ import { Button, Heading, MultiStep, Text } from '@camposweb-ignite-ui/react'
 import { ConnectBox } from '../connect-box'
 import { ConnectItem } from '../connect-item'
 import { signIn, useSession } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { AuthError } from '../auth/auth-error'
 
 export function ConnectCalendar() {
   const session = useSession()
   const searhParams = useSearchParams()
+  const router = useRouter()
 
   const hasAuthError = !!searhParams.get('error')
   const isSignedIn = session.status === 'authenticated'
@@ -50,7 +51,12 @@ export function ConnectCalendar() {
             permissões de acesso ao Google Calendar
           </AuthError>
         )}
-        <Button type="submit" className="mt-4" disabled={!isSignedIn}>
+        <Button
+          type="submit"
+          className="mt-4"
+          disabled={!isSignedIn}
+          onClick={() => router.push('/register/time-interval')}
+        >
           Próximo passo
           <ArrowRight />
         </Button>

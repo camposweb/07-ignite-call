@@ -5,6 +5,13 @@ import { cookies } from 'next/headers'
 
 type User = AdapterUser & {
   username: string
+  bio?: string
+}
+
+declare module 'next-auth' {
+  interface Session {
+    user: User
+  }
 }
 
 export default function PrismaAdapter(): Adapter {
