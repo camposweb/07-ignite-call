@@ -6,7 +6,7 @@ import { TimePickerItem } from './components/time-picker-item'
 import { TimePickerList } from './components/time-picker-list'
 
 export function CalendarStep() {
-  const isDateSelected = true
+  const isDateSelected = false
   return (
     <ScheduleContainer isTimePickerOpen={isDateSelected}>
       <Calendar />
