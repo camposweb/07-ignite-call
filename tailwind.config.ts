@@ -66,6 +66,10 @@ const config: Config = {
       maxWidth: {
         'ignite-with': 'calc(100vw - (100vw - 1160px) / 2)',
       },
+      gridTemplateColumns: {
+        'ignite-grid-true': '1fr 280px',
+        'ignite-grid-false': '1fr',
+      },
     },
   },
   plugins: [],

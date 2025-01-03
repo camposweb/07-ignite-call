@@ -17,7 +17,7 @@ import { ArrowRight } from 'lucide-react'
 import { z } from 'zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { getWeeksDays } from '@/utils/get-weeks-days'
+import { getWeekDays } from '@/utils/get-week-days'
 import { FormError } from '../form-error'
 import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
 import { api } from '@/lib/axios'
@@ -88,7 +88,7 @@ export function TimeInterval() {
     },
   })
 
-  const weeksDays = getWeeksDays()
+  const weeksDays = getWeekDays()
 
   const { fields } = useFieldArray({
     control,
