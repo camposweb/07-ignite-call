@@ -1,141 +1,134 @@
+'use client'
+import dayjs from 'dayjs'
+import '../lib/dayjs'
 import { getWeekDays } from '@/utils/get-week-days'
-import { Text } from '@camposweb-ignite-ui/react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { ComponentProps } from 'react'
-import { tv, VariantProps } from 'tailwind-variants'
+import { useMemo, useState } from 'react'
+import {
+  CalendarActions,
+  CalendarBody,
+  CalendarContainer,
+  CalendarDay,
+  CalendarHeader,
+  CalendarTitle,
+} from './schedule/components/calendar-components'
 
-const calendarContainer = tv({
-  base: ['flex flex-col gap 6 p-6'],
-})
-
-type CalendarContainerType = ComponentProps<'div'> &
-  VariantProps<typeof calendarContainer>
-
-export const CalendarContainer = ({
-  className,
-  ...props
-}: CalendarContainerType) => {
-  return (
-    <div
-      {...props}
-      className={calendarContainer({
-        className,
-      })}
-    />
-  )
+interface CalendarWeek {
+  week: number
+  days: Array<{
+    date: dayjs.Dayjs
+    disabled: boolean
+  }>
 }
 
-const calendarHeader = tv({
-  base: ['flex items-center justify-between'],
-})
+type CalendarWeeks = CalendarWeek[]
 
-type CalendarHeaderType = ComponentProps<'div'> &
-  VariantProps<typeof calendarHeader>
-
-export const CalendarHeader = ({ className, ...props }: CalendarHeaderType) => {
-  return (
-    <div
-      {...props}
-      className={calendarHeader({
-        className,
-      })}
-    />
-  )
+interface CalendarProps {
+  selectedDate: Date | null
+  onDateSelected: (date: Date) => void
 }
 
-const calendarTitle = tv({
-  base: ['font-medium'],
-})
+export const Calendar = ({ selectedDate, onDateSelected }: CalendarProps) => {
+  const [currentDate, setCurrentDate] = useState(() => {
+    return dayjs().set('date', 1)
+  })
 
-type CalendarTitleType = ComponentProps<typeof Text> &
-  VariantProps<typeof calendarTitle>
-
-export const CalendarTitle = ({ className, ...props }: CalendarTitleType) => {
-  return (
-    <Text
-      {...props}
-      className={calendarTitle({
-        className,
-      })}
-    />
-  )
-}
-
-const calendarActions = tv({
-  base: ['flex gap-2 text-gray200'],
-})
-
-type CalendarActionsType = ComponentProps<'div'> &
-  VariantProps<typeof calendarActions>
-
-export const CalendarActions = ({
-  className,
-  ...props
-}: CalendarActionsType) => {
-  return (
-    <div
-      {...props}
-      className={calendarActions({
-        className,
-      })}
-    />
-  )
-}
-
-const calendarBody = tv({
-  base: ['w-full font-roboto border-spacing-1 table-fixed'],
-})
-
-type CalendarBodyType = ComponentProps<'table'> &
-  VariantProps<typeof calendarBody>
-
-export const CalendarBody = ({ className, ...props }: CalendarBodyType) => {
-  return (
-    <table
-      {...props}
-      className={calendarBody({
-        className,
-      })}
-    />
-  )
-}
-
-const calendarDay = tv({
-  base: [
-    'w-full aspect-square bg-gray600 text-center cursor-pointer rounded-sm text-white',
-    'focus:shadow-none focus:shadow-gray100',
-    'disabled:bg-none disabled:cursor-default disabled:opacity-5',
-    'hover:bg-gray500',
-  ],
-})
-
-type CalendarDayType = ComponentProps<'button'> &
-  VariantProps<typeof calendarDay>
-
-export const CalendarDay = ({ className, ...props }: CalendarDayType) => {
-  return (
-    <button
-      {...props}
-      className={calendarDay({
-        className,
-      })}
-    />
-  )
-}
-
-export const Calendar = () => {
   const shortWeekDays = getWeekDays({ short: true })
+
+  const currentMonth = currentDate.format('MMMM')
+  const currentYear = currentDate.format('YYYY')
+
+  const calendarWeeks = useMemo(() => {
+    const daysInMonthArray = Array.from({
+      length: currentDate.daysInMonth(),
+    }).map((_, index) => {
+      return currentDate.set('date', index + 1)
+    })
+
+    const firstWeekDay = currentDate.get('day')
+
+    const previousMonthFillArray = Array.from({
+      length: firstWeekDay,
+    })
+      .map((_, index) => {
+        return currentDate.subtract(index + 1, 'day')
+      })
+      .reverse()
+
+    const lastDayInCurrentMonth = currentDate.set(
+      'date',
+      currentDate.daysInMonth(),
+    )
+    const lastWeekDay = lastDayInCurrentMonth.get('day')
+
+    const nextMonthFillArray = Array.from({
+      length: 7 - (lastWeekDay + 1),
+    }).map((_, i) => {
+      return lastDayInCurrentMonth.add(i + 1, 'day')
+    })
+
+    const calendarDays = [
+      ...previousMonthFillArray.map((date) => {
+        return { date, disabled: true }
+      }),
+      ...daysInMonthArray.map((date) => {
+        return { date, disabled: date.endOf('day').isBefore(new Date()) }
+      }),
+      ...nextMonthFillArray.map((date) => {
+        return { date, disabled: true }
+      }),
+    ]
+
+    const calendarWeeks = calendarDays.reduce<CalendarWeeks>(
+      (weeks, _, i, original) => {
+        const isNewWeek = i % 7 === 0
+
+        if (isNewWeek) {
+          weeks.push({
+            week: i / 7 + 1,
+            days: original.slice(i, i + 7),
+          })
+        }
+
+        return weeks
+      },
+      [],
+    )
+
+    return calendarWeeks
+  }, [currentDate])
+
+  console.log(calendarWeeks)
+
+  function handlePreviousMonth() {
+    const previousMonthDate = currentDate.subtract(1, 'month')
+
+    setCurrentDate(previousMonthDate)
+  }
+
+  function handleNextMonth() {
+    const nextMonthDate = currentDate.add(1, 'month')
+
+    setCurrentDate(nextMonthDate)
+  }
+
   return (
     <CalendarContainer>
       <CalendarHeader>
         <CalendarTitle>
-          Dezembro <span className="text-gray200">2022</span>
+          {currentMonth} <span className="text-gray200">{currentYear}</span>
         </CalendarTitle>
         <CalendarActions>
-          <button className="leading-0 cursor-pointer rounded-sm hover:text-gray100 focus:shadow-inner focus:shadow-gray100">
+          <button
+            onClick={handlePreviousMonth}
+            className="leading-0 cursor-pointer rounded-sm hover:text-gray100 focus:shadow-inherit"
+          >
             <ChevronLeft />
           </button>
-          <button>
+          <button
+            onClick={handleNextMonth}
+            className="leading-0 cursor-pointer rounded-sm hover:text-gray100 focus:shadow-inherit"
+          >
             <ChevronRight />
           </button>
         </CalendarActions>
@@ -151,45 +144,22 @@ export const Calendar = () => {
           </tr>
         </thead>
         <tbody className="leading-3 text-gray800 before:block before:content-['\\00A0']">
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>2</CalendarDay>
-              {/* <CalendarDay disabled>2</CalendarDay> */}
-            </td>
-            <td>
-              <CalendarDay>3</CalendarDay>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay disabled>2</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>3</CalendarDay>
-            </td>
-          </tr>
+          {calendarWeeks.map(({ week, days }) => {
+            return (
+              <tr key={week}>
+                {days.map(({ date, disabled }) => (
+                  <td key={date.toString()}>
+                    <CalendarDay
+                      onClick={() => onDateSelected(date.toDate())}
+                      disabled={disabled}
+                    >
+                      {date.get('date')}
+                    </CalendarDay>
+                  </td>
+                ))}
+              </tr>
+            )
+          })}
         </tbody>
       </CalendarBody>
     </CalendarContainer>

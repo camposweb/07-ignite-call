@@ -1,3 +1,4 @@
+import { ConfirmStep } from '@/components/schedule/confirm-step'
 import { ScheduleForm } from '@/components/schedule/schedule-form'
 import { UserHeader } from '@/components/user-header'
 import { api } from '@/lib/axios'
@@ -60,6 +61,7 @@ export default async function PageSchedule({ params }: SchedulePageProps) {
         <Text className="text-gray200">{user.bio}</Text>
       </UserHeader>
       <ScheduleForm />
+      {/* <ConfirmStep /> */}
     </div>
   )
 }

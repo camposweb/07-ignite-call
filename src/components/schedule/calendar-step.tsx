@@ -1,3 +1,5 @@
+'use client'
+import { useState } from 'react'
 import { Calendar } from '../calendar'
 import { ScheduleContainer } from './components/schedule-container'
 import { TimePicker } from './components/time-picker'
@@ -6,10 +8,11 @@ import { TimePickerItem } from './components/time-picker-item'
 import { TimePickerList } from './components/time-picker-list'
 
 export function CalendarStep() {
-  const isDateSelected = false
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const isDateSelected = !!selectedDate
   return (
     <ScheduleContainer isTimePickerOpen={isDateSelected}>
-      <Calendar />
+      <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
       {isDateSelected && (
         <TimePicker>
           <TimePickerHeader>

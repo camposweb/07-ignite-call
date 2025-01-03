@@ -1,3 +1,4 @@
+import '../lib/dayjs'
 import { Roboto } from 'next/font/google'
 import type { Metadata } from 'next'
 import './globals.css'
