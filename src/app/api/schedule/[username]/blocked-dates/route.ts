@@ -56,17 +56,34 @@ export async function GET(req: NextRequest, context: { params: Params }) {
     // const formatMonth = Number(String(month).length === 1 ? `0${month}` : month)
 
     const query = Prisma.sql`
-      SELECT * FROM schedulings S
-        WHERE S.user_id = ${user.id}
-          AND TO_CHAR(S.date, 'YYYY-MM') = ${`${year}-${month}`}
+       SELECT
+  EXTRACT(DAY FROM S.date) AS date,
+  COUNT(S.date) AS amount,
+  ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60) AS size
+FROM schedulings S 
+
+LEFT JOIN user_time_intervals UTI
+  ON UTI.week_day = EXTRACT(ISODOW FROM S.date) 
+  
+WHERE S.user_id = ${user.id}
+  AND UTI.user_id = ${user.id}
+  AND TO_CHAR(S.date, 'YYYY-MM') = ${`${year}-${month}`}
+
+GROUP BY EXTRACT(DAY FROM S.date), UTI.time_end_in_minutes, UTI.time_start_in_minutes
+
+HAVING COUNT(S.date) >= ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60)
+
    `
 
-    const blockedWeeksRaw = await prisma.$queryRaw(query)
+    const blockedWeeksRaw: Array<{ date: number }> =
+      await prisma.$queryRaw(query)
 
-    return NextResponse.json(
-      { blockedWeekDays, blockedWeeksRaw },
-      { status: 200 },
-    )
+    console.log(blockedWeeksRaw)
+
+    const blockedDates = blockedWeeksRaw.map((item) => Number(item.date))
+    // const dates = Number(blockedDates)
+
+    return NextResponse.json({ blockedWeekDays, blockedDates }, { status: 200 })
   } catch (error) {
     return NextResponse.json(
       { message: 'Algum erro ocorreu' + error },

@@ -65,7 +65,7 @@ export const Calendar = ({ selectedDate, onDateSelected }: CalendarProps) => {
     queryKey: [
       'blocked-dates',
       currentDate.get('year'),
-      currentDate.get('month') + 1,
+      currentDate.get('month'),
     ],
     queryFn: async () => {
       const response = await api.get(
@@ -73,10 +73,7 @@ export const Calendar = ({ selectedDate, onDateSelected }: CalendarProps) => {
         {
           params: {
             year: currentDate.get('year'),
-            month:
-              String(currentDate.get('month') + 1).length === 1
-                ? `0${currentDate.get('month') + 1}`
-                : currentDate.get('month') + 1,
+            month: String(currentDate.get('month') + 1).padStart(2, '0'),
           },
         },
       )
@@ -154,6 +151,9 @@ export const Calendar = ({ selectedDate, onDateSelected }: CalendarProps) => {
 
     return calendarWeeks
   }, [currentDate, blockedDates])
+
+  console.log(blockedDates?.blockedDates)
+  console.log(dayjs().day(6))
 
   return (
     <CalendarContainer>
