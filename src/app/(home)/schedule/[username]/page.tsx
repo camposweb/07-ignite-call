@@ -1,4 +1,3 @@
-import { ConfirmStep } from '@/components/schedule/confirm-step'
 import { ScheduleForm } from '@/components/schedule/schedule-form'
 import { UserHeader } from '@/components/user-header'
 import { api } from '@/lib/axios'
@@ -46,6 +45,10 @@ export default async function PageSchedule({ params }: SchedulePageProps) {
   const queryClient = new QueryClient()
   const user = await getUser(params.username)
 
+  queryClient.prefetchQuery({
+    queryKey: ['availability'],
+  })
+
   if (!user) {
     return (
       <div className="mb-4 mt-20 flex justify-center px-4 py-0">
@@ -68,7 +71,6 @@ export default async function PageSchedule({ params }: SchedulePageProps) {
           <Text className="text-gray200">{user.bio}</Text>
         </UserHeader>
         <ScheduleForm />
-        {/* <ConfirmStep /> */}
       </div>
     </HydrationBoundary>
   )

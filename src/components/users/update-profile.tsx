@@ -17,6 +17,7 @@ import { ArrowRight } from 'lucide-react'
 import { FormDescription } from '../form-description'
 import { useSession } from 'next-auth/react'
 import { api } from '@/lib/axios'
+import { useRouter } from 'next/navigation'
 
 const updateProfileSchema = z.object({
   bio: z.string(),
@@ -26,6 +27,7 @@ type UpdateProfileData = z.infer<typeof updateProfileSchema>
 
 export function UpdateProfile() {
   const session = useSession()
+  const router = useRouter()
 
   const {
     register,
@@ -39,6 +41,8 @@ export function UpdateProfile() {
     await api.put('/update-profile', {
       bio: data.bio,
     })
+
+    router.push(`/schedule/${session.data?.user?.username}`)
   }
 
   return (
@@ -72,7 +76,7 @@ export function UpdateProfile() {
           </FormDescription>
         </label>
         <Button type="submit" className="mt-4" disabled={isSubmitting}>
-          Próximo passo
+          Finalizar
           <ArrowRight />
         </Button>
       </ProfileBox>
