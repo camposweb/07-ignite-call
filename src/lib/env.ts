@@ -8,6 +8,10 @@ export const env = createEnv({
     AUTH_SECRET: z.string(),
     BASE_URL: z.string().url(),
   },
-  client: {},
-  experimental__runtimeEnv: {},
+  client: {
+    NEXT_PUBLIC_BASE_URL: z.string().url(),
+  },
+  experimental__runtimeEnv: {
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+  },
 })
