@@ -143,7 +143,7 @@ export const Calendar = ({ selectedDate, onDateSelected }: CalendarProps) => {
             ))}
           </tr>
         </thead>
-        <tbody className="leading-3 text-gray800 before:block before:content-['\\00A0']">
+        <tbody className="font-roboto leading-3 text-gray800 before:block before:content-['\\\\00A0']">
           {calendarWeeks.map(({ week, days }) => {
             return (
               <tr key={week}>

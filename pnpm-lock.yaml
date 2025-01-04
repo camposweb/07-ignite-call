@@ -26,6 +26,12 @@ importers:
       '@t3-oss/env-nextjs':
         specifier: ^0.11.1
         version: 0.11.1(typescript@5.7.2)(zod@3.24.1)
+      '@tanstack/react-query':
+        specifier: ^5.62.14
+        version: 5.62.14(react@18.3.1)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.62.14
+        version: 5.62.14(@tanstack/react-query@5.62.14(react@18.3.1))(react@18.3.1)
       axios:
         specifier: ^1.7.9
         version: 1.7.9
@@ -620,6 +626,23 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  '@tanstack/query-core@5.62.12':
+    resolution: {integrity: sha512-6igFeBgymHkCxVgaEk+yiLwkMf9haui/EQLmI3o9CatOyDThEoFKe8toLWvWliZC/Jf+h7NwHi/zjfyLArr1ow==}
+
+  '@tanstack/query-devtools@5.62.9':
+    resolution: {integrity: sha512-b1NZzDLVf6laJsB1Cfm3ieuYzM+WqoO8qpm9v+3Etwd+Ph4zkhUMiT+wcWj5AhEPsXiRodKYiiW048VDNdBxNg==}
+
+  '@tanstack/react-query-devtools@5.62.14':
+    resolution: {integrity: sha512-5OEOWzO9gLovbKozIaSRHXXPd30dooa+MZTG0gfMMTKXhH5lct6SLozQ5ngRvzrbYpfL4c9i2+6bX8Hwu8sT0w==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.62.14
+      react: ^18 || ^19
+
+  '@tanstack/react-query@5.62.14':
+    resolution: {integrity: sha512-ev/6eVdJvX9vpomKmFuXsrQb6TwqqBn/7OeB0KZkHjEYk/Bo1XBMj8wRmobn8pqdU8lK271tUjt+0B0UQ9MZ6A==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
@@ -2803,6 +2826,21 @@ snapshots:
       zod: 3.24.1
     optionalDependencies:
       typescript: 5.7.2
+
+  '@tanstack/query-core@5.62.12': {}
+
+  '@tanstack/query-devtools@5.62.9': {}
+
+  '@tanstack/react-query-devtools@5.62.14(@tanstack/react-query@5.62.14(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-devtools': 5.62.9
+      '@tanstack/react-query': 5.62.14(react@18.3.1)
+      react: 18.3.1
+
+  '@tanstack/react-query@5.62.14(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-core': 5.62.12
+      react: 18.3.1
 
   '@types/cookie@0.6.0': {}
 

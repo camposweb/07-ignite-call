@@ -101,9 +101,9 @@ export const CalendarBody = ({ className, ...props }: CalendarBodyType) => {
 const calendarDay = tv({
   base: [
     'w-full aspect-square bg-gray600 text-center cursor-pointer rounded-sm text-white',
-    'focus:shadow-none focus:shadow-gray100',
-    'disabled:bg-none disabled:cursor-default disabled:opacity-5',
-    'hover:bg-gray500',
+    'focus:shadow-inherit',
+    'disabled:bg-none disabled:cursor-default disabled:opacity-5 disabled:text-white',
+    'hover:bg-gray500 transition',
   ],
 })
 

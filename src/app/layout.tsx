@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import '@camposweb-ignite-ui/react/dist/index.css'
 import Authprovider from './AuthProvider'
+import ReactQueryProvider from './ReactQueryProvider'
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -28,7 +29,9 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} bg-gray900 text-gray100 antialiased`}
       >
-        <Authprovider>{children}</Authprovider>
+        <ReactQueryProvider>
+          <Authprovider>{children}</Authprovider>
+        </ReactQueryProvider>
       </body>
     </html>
   )
