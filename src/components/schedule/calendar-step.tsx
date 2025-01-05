@@ -26,7 +26,6 @@ export function CalendarStep({ onSelectDateTime }: CalendarStep) {
   const params = useParams<{ username: string }>()
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  /* const [availability, setAvailability] = useState<Availability | null>(null) */
   const isDateSelected = !!selectedDate
 
   const weekDay = selectedDate ? dayjs(selectedDate).format('dddd') : null
@@ -46,6 +45,7 @@ export function CalendarStep({ onSelectDateTime }: CalendarStep) {
         {
           params: {
             date: selectedDateWithoutTime,
+            timezoneOffset: selectedDate ? selectedDate.getTimezoneOffset : 0,
           },
         },
       )

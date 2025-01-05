@@ -1,8 +1,11 @@
 /* eslint-disable camelcase */
 import { prisma } from '@/lib/prisma'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+
+dayjs.extend(utc)
 
 type Params = {
   username: string
@@ -12,9 +15,10 @@ export async function GET(req: NextRequest, context: { params: Params }) {
   try {
     const searchParams = req.nextUrl.searchParams
     const date = searchParams.get('date')
+    const timezoneOffset = searchParams.get('timezoneOffset')
     const username = z.string().parse(context.params.username)
 
-    if (!date) {
+    if (!date || !timezoneOffset) {
       return NextResponse.json(
         { message: 'Date not provided.' },
         { status: 400 },
@@ -36,6 +40,14 @@ export async function GET(req: NextRequest, context: { params: Params }) {
 
     const referenceDate = dayjs(String(date))
     const isPastDate = referenceDate.endOf('day').isBefore(new Date())
+
+    const timezoneOffsetInHours =
+      typeof timezoneOffset === 'string'
+        ? Number(timezoneOffset) / 60
+        : Number(timezoneOffset[0]) / 60
+
+    const referenceDateTimeZoneOffsetInHours =
+      referenceDate.toDate().getTimezoneOffset() / 60
 
     if (isPastDate) {
       return NextResponse.json({ possibleTimes: [], availableTimes: [] })
@@ -70,18 +82,28 @@ export async function GET(req: NextRequest, context: { params: Params }) {
       where: {
         user_id: user.id,
         date: {
-          gte: referenceDate.set('hour', startHour).toDate(),
-          lte: referenceDate.set('hour', endHour).toDate(),
+          gte: referenceDate
+            .set('hour', startHour)
+            .add(timezoneOffsetInHours, 'hours')
+            .toDate(),
+          lte: referenceDate
+            .set('hour', endHour)
+            .add(timezoneOffsetInHours, 'hours')
+            .toDate(),
         },
       },
     })
 
     const availableTimes = possibleTimes.filter((time) => {
       const isTimeBlocked = blockedTimes.some(
-        (blockedTime) => blockedTime.date.getHours() === time,
+        (blockedTime) =>
+          blockedTime.date.getUTCHours() - timezoneOffsetInHours === time,
       )
 
-      const isTimeInPast = referenceDate.set('hour', time).isBefore(new Date())
+      const isTimeInPast = referenceDate
+        .set('hour', time)
+        .subtract(referenceDateTimeZoneOffsetInHours, 'hours')
+        .isBefore(dayjs().utc().subtract(timezoneOffsetInHours, 'hours'))
 
       return !isTimeBlocked && !isTimeInPast
     })
