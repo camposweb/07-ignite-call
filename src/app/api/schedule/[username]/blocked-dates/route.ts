@@ -57,21 +57,25 @@ export async function GET(req: NextRequest, context: { params: Params }) {
 
     const query = Prisma.sql`
        SELECT
-  EXTRACT(DAY FROM S.date) AS date,
-  COUNT(S.date) AS amount,
-  ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60) AS size
-FROM schedulings S 
+    EXTRACT(DAY FROM S.DATE) AS date,
+    COUNT(S.date),
+    ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60)
 
-LEFT JOIN user_time_intervals UTI
-  ON UTI.week_day = EXTRACT(ISODOW FROM S.date) 
-  
-WHERE S.user_id = ${user.id}
-  AND UTI.user_id = ${user.id}
-  AND TO_CHAR(S.date, 'YYYY-MM') = ${`${year}-${month}`}
+  FROM schedulings S
 
-GROUP BY EXTRACT(DAY FROM S.date), UTI.time_end_in_minutes, UTI.time_start_in_minutes
+  LEFT JOIN user_time_intervals UTI
+    ON UTI.week_day = EXTRACT(DOW FROM S.date + INTERVAL '1 day')
 
-HAVING COUNT(S.date) >= ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60)
+  WHERE S.user_id = ${user.id}
+    AND UTI.user_id = ${user.id}
+    AND EXTRACT(YEAR FROM S.date) = ${year}::int
+    AND EXTRACT(MONTH FROM S.date) = ${month}::int
+
+  GROUP BY EXTRACT(DAY FROM S.DATE),
+    ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60)
+
+  HAVING
+    COUNT(S.date) >= ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60);
 
    `
 
