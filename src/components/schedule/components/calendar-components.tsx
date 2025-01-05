@@ -104,6 +104,7 @@ const calendarDay = tv({
     'focus:shadow-inherit',
     'disabled:bg-none disabled:cursor-default disabled:opacity-5 disabled:text-white',
     'hover:bg-gray500 transition',
+    'data-[active=true]:bg-gray500',
   ],
 })
 

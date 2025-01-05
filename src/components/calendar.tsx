@@ -193,6 +193,7 @@ export const Calendar = ({ selectedDate, onDateSelected }: CalendarProps) => {
                       <CalendarDay
                         onClick={() => onDateSelected(date.toDate())}
                         disabled={disabled}
+                        data-active={date.isSame(selectedDate)}
                       >
                         {date.get('date')}
                       </CalendarDay>
