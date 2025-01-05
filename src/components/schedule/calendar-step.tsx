@@ -45,7 +45,7 @@ export function CalendarStep({ onSelectDateTime }: CalendarStep) {
         {
           params: {
             date: selectedDateWithoutTime,
-            timezoneOffset: selectedDate ? selectedDate.getTimezoneOffset : 0,
+            timezoneOffset: selectedDate ? selectedDate.getTimezoneOffset() : 0,
           },
         },
       )
