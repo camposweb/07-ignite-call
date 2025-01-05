@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const { intervals } = timeIntervalBodySchema.parse(body)
 
-  await Promise.all(
+  /*  await Promise.all(
     intervals.map((interval) => {
       return prisma.userTimeInterval.create({
         data: {
@@ -39,15 +39,15 @@ export async function POST(req: NextRequest) {
       })
     }),
   )
-
-  /* await prisma.userTimeInterval.createMany({
+ */
+  await prisma.userTimeInterval.createMany({
     data: intervals.map((interval) => ({
       week_day: interval.weekDay,
       time_start_in_minutes: interval.startTimeInMinutes,
       time_end_in_minutes: interval.endTimeInMinutes,
       user_id: session.user?.id || '',
     })),
-  }) */
+  })
 
   return NextResponse.json({ status: 201 })
 }
