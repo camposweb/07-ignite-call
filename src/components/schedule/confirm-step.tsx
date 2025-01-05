@@ -8,6 +8,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormError } from '../form-error'
+import dayjs from 'dayjs'
 
 const confirmformSchema = z.object({
   name: z.string().min(3, { message: 'O nome precisa no mínimo 3 caracteres' }),
@@ -17,7 +18,15 @@ const confirmformSchema = z.object({
 
 type ConfirmFormData = z.infer<typeof confirmformSchema>
 
-export function ConfirmStep() {
+interface ConfirmStepProps {
+  scheduleDate: Date
+  onCancelConfirmation: () => void
+}
+
+export function ConfirmStep({
+  scheduleDate,
+  onCancelConfirmation,
+}: ConfirmStepProps) {
   const {
     register,
     handleSubmit,
@@ -29,17 +38,21 @@ export function ConfirmStep() {
   function handleConfirmScheduling(data: ConfirmFormData) {
     console.log(data)
   }
+
+  const describeDate = dayjs(scheduleDate).format('DD [ de ] MMMM [ de ] YYYY')
+  const describeTime = dayjs(scheduleDate).format('HH:mm[h]')
+
   return (
     <ConfirmForm as="form" onSubmit={handleSubmit(handleConfirmScheduling)}>
       <FormHeader>
         <Text>
           <Calendar className="text-gray200" />
         </Text>
-        <Text className="text-white">22 de Setembro de 2022</Text>
+        <Text className="text-white">{describeDate}</Text>
         <Text>
           <Clock className="text-gray200" />
         </Text>
-        <Text className="text-white">18:00h</Text>
+        <Text className="text-white">{describeTime}</Text>
       </FormHeader>
       <label className="flex flex-col gap-2 border-none">
         <Text size="sm">Nome completo</Text>
@@ -65,7 +78,12 @@ export function ConfirmStep() {
         <TextArea {...register('observations')} />
       </label>
       <FormActions>
-        <Button type="button" variant="tertiary" className="hover:border">
+        <Button
+          type="button"
+          onClick={onCancelConfirmation}
+          variant="tertiary"
+          className="hover:border"
+        >
           Cancelar
         </Button>
         <Button type="submit" disabled={isSubmitting}>
