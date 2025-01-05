@@ -152,9 +152,6 @@ export const Calendar = ({ selectedDate, onDateSelected }: CalendarProps) => {
     return calendarWeeks
   }, [currentDate, blockedDates])
 
-  console.log(blockedDates?.blockedDates)
-  console.log(dayjs().day(6))
-
   return (
     <CalendarContainer>
       <CalendarHeader>
