@@ -10,8 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FormError } from '../form-error'
 import dayjs from 'dayjs'
 import { api } from '@/lib/axios'
-import { env } from '@/lib/env'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 const confirmformSchema = z.object({
   name: z.string().min(3, { message: 'O nome precisa no mínimo 3 caracteres' }),
@@ -31,7 +30,6 @@ export function ConfirmStep({
   onCancelConfirmation,
 }: ConfirmStepProps) {
   const params = useParams<{ username: string }>()
-  // const router = useRouter()
 
   const {
     register,
