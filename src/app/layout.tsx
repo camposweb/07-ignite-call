@@ -5,6 +5,7 @@ import './globals.css'
 import '@camposweb-ignite-ui/react/dist/index.css'
 import Authprovider from './AuthProvider'
 import ReactQueryProvider from './ReactQueryProvider'
+import { Analytics } from '@vercel/analytics/next'
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -32,6 +33,7 @@ export default function RootLayout({
         <ReactQueryProvider>
           <Authprovider>{children}</Authprovider>
         </ReactQueryProvider>
+        <Analytics />
       </body>
     </html>
   )
