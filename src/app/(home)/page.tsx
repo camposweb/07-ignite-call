@@ -5,7 +5,9 @@ import { ClaimUsernameForm } from '@/components/claim-username-form'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Home',
+  title: 'Descomplique sua agenda',
+  description:
+    'Conecte seu calendário e permita que as pessoas marquem agendamentos no seu tempo livre.',
 }
 
 export default async function Home() {

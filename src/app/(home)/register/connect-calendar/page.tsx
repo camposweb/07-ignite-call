@@ -3,7 +3,10 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: 'Conectando ao calendário Google',
+  title: 'Conecte sua agenda do Google',
+  robots: {
+    index: false,
+  },
 }
 
 export default async function PageConnectCalendar() {

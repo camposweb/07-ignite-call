@@ -37,8 +37,17 @@ async function getUser(username: string): Promise<ScheduleProps> {
   }))
 } */
 
-export const metadata: Metadata = {
-  title: 'Calendário',
+export async function generateMetadata({
+  params,
+}: SchedulePageProps): Promise<Metadata> {
+  const user = await getUser(params.username)
+
+  return {
+    title: `Agendar com ${user.name}`,
+    robots: {
+      index: false,
+    },
+  }
 }
 
 export default async function PageSchedule({ params }: SchedulePageProps) {

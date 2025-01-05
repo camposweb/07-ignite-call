@@ -3,7 +3,10 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: 'Atualização do perfil',
+  title: 'Atualize seu perfil',
+  robots: {
+    index: false,
+  },
 }
 
 export default async function PageUpdateProfile() {
